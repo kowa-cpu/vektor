@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вектор</title>
+    <meta name="description" content="Персональный путь развития сотрудника" />
+    <meta name="theme-color" content="#00a83a" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111111'/%3E%3Cpath d='M6.5 22.5 L16 8.5 L25.5 22.5' fill='none' stroke='%2300C244' stroke-width='4.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" />
+    <style>
+      :root {
+        --bg: #f4f6f2;
+        --surface: #fff;
+        --fg: #121417;
+        --muted: #5c6560;
+        --primary: #00a83a;
+        --primary-fg: #fff;
+        --tint: #e6f8ec;
+        --border: #e2e6e1;
+        --sans: Manrope, ui-sans-serif, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--fg); font-family: var(--sans); }
+      button, input { font: inherit; }
+      button { cursor: pointer; }
+      main { max-width: 48rem; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+      header { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+      .eyebrow { margin: 0; color: var(--primary); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.02em; }
+      h1 { margin: 0; font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; }
+      .lead { margin: 0.25rem 0 0; color: var(--muted); }
+      .mark { width: 3.5rem; height: 3.5rem; flex: none; }
+      nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-bottom: 1.25rem; padding: 0.25rem; background: var(--surface); border-radius: 1rem; box-shadow: 0 1px 2px rgba(18, 20, 23, 0.04); border: 1px solid var(--border); }
+      nav button { min-height: 2.75rem; border: 0; border-radius: 0.75rem; background: transparent; color: var(--muted); font-size: 0.875rem; font-weight: 700; }
+      nav button[aria-selected="true"] { background: var(--primary); color: var(--primary-fg); }
+      nav button:hover:not([aria-selected="true"]) { background: var(--tint); }
+      .panel { display: grid; gap: 1rem; }
+      .panel[hidden] { display: none; }
+      label { display: block; }
+      .lbl { display: block; margin-bottom: 0.4rem; color: var(--muted); font-size: 0.875rem; font-weight: 700; }
+      input[type="text"] { width: 100%; height: 3rem; padding: 0 1rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--surface); color: var(--fg); }
+      input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+      .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      @media (min-width: 640px) { .roles { grid-template-columns: repeat(3, 1fr); } main { padding-left: 1.5rem; padding-right: 1.5rem; } }
+      .role { min-height: 3.5rem; padding: 0.5rem 0.75rem; text-align: left; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--surface); color: inherit; }
+      .role small { display: block; font-size: 0.75rem; opacity: 0.8; }
+      .role b { display: block; font-size: 0.875rem; line-height: 1.25; }
+      .role[aria-pressed="true"] { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+      .role:hover:not([aria-pressed="true"]) { background: var(--tint); }
+      .card, .gap, .step, .team { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; }
+      .card { padding: 1.25rem; }
+      .card p { margin: 0; }
+      .muted { color: var(--muted); }
+      .route { margin-top: 0.25rem; font-size: 1.25rem; font-weight: 800; }
+      .route span { margin: 0 0.5rem; color: var(--primary); }
+      .go { margin-top: 1rem; height: 3rem; padding: 0 1.25rem; border: 0; border-radius: 0.75rem; background: var(--primary); color: var(--primary-fg); font-weight: 700; }
+      .note { margin: 0; padding: 0.75rem 1rem; border-radius: 1rem; background: var(--tint); }
+      h2 { margin: 0; font-size: 1.125rem; }
+      .gap, .step { padding: 1rem; }
+      .row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+      .row p { margin: 0; }
+      .delta { margin-left: 0.5rem; color: var(--primary); font-weight: 700; }
+      .bar { position: relative; height: 0.5rem; overflow: hidden; border-radius: 999px; background: var(--border); }
+      .bar i, .bar b { position: absolute; inset: 0 auto 0 0; }
+      .bar i { background: var(--tint); }
+      .bar b { background: var(--primary); }
+      .plan-head { display: flex; align-items: flex-end; justify-content: space-between; }
+      .count { margin: 0; color: var(--primary); font-size: 0.875rem; font-weight: 700; }
+      .step { display: flex; width: 100%; gap: 0.75rem; text-align: left; color: inherit; }
+      .step.on { background: var(--tint); border-color: var(--primary); }
+      .step:hover { background: var(--tint); }
+      .box { margin-top: 0.15rem; width: 1.5rem; height: 1.5rem; flex: none; display: grid; place-items: center; border-radius: 0.4rem; background: var(--bg); color: var(--muted); border: 1px solid var(--border); font-size: 0.75rem; font-weight: 800; }
+      .step.on .box { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+      .kind { color: var(--muted); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+      .step strong, .step em { display: block; }
+      .step strong { margin-top: 0.15rem; font-style: normal; }
+      .step em { margin-top: 0.25rem; color: var(--muted); font-size: 0.875rem; font-style: normal; }
+      .team { overflow: hidden; }
+      .team-head { display: flex; align-items: center; justify-content: space-between; padding: 1rem; }
+      .pill { padding: 0.25rem 0.75rem; border-radius: 999px; background: var(--tint); color: var(--primary); font-size: 0.875rem; font-weight: 700; }
+      .member { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.75rem 1rem; border-top: 1px solid var(--border); }
+      .member.me { background: var(--tint); }
+      .member p { margin: 0; }
+      .member .who { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .member .sub { color: var(--muted); font-size: 0.875rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .meter { width: 7rem; }
+      .meter p { margin: 0 0 0.25rem; text-align: right; color: var(--muted); font-size: 0.75rem; font-weight: 700; }
+      .meter .bar b, .meter .bar i { position: static; display: block; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">Мини-приложение</p>
+          <h1>Вектор</h1>
+          <p class="lead">Путь от текущей роли к следующей — с конкретными шагами.</p>
+        </div>
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="16" fill="#00a83a" />
+          <path d="M16 44 L32 18 L48 44" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </header>
+      <nav id="tabs" aria-label="Разделы"></nav>
+      <section id="path" class="panel"></section>
+      <section id="gaps" class="panel" hidden></section>
+      <section id="plan" class="panel" hidden></section>
+      <section id="team" class="panel" hidden></section>
+    </main>
+    <script>
+      const SKILLS = [
+        { id: "sql", name: "SQL и данные" },
+        { id: "design", name: "System Design" },
+        { id: "docker", name: "Docker и инфраструктура" },
+        { id: "review", name: "Code Review" },
+        { id: "comms", name: "Коммуникация" },
+        { id: "analytics", name: "Продуктовая аналитика" },
+        { id: "lead", name: "Лидерство" },
+      ];
+      const lvl = (sql, design, docker, review, comms, analytics, lead) => ({ sql, design, docker, review, comms, analytics, lead });
+      const ROLES = [
+        { id: "intern", title: "Стажёр", track: "Инженерия", levels: lvl(20, 5, 10, 10, 25, 10, 0) },
+        { id: "jbe", title: "Junior Backend", track: "Инженерия", levels: lvl(40, 20, 25, 30, 35, 15, 5) },
+        { id: "mbe", title: "Middle Backend", track: "Инженерия", levels: lvl(70, 55, 65, 70, 55, 30, 25) },
+        { id: "sbe", title: "Senior Backend", track: "Инженерия", levels: lvl(85, 85, 80, 90, 75, 45, 60) },
+        { id: "pa", title: "Product Analyst", track: "Продукт", levels: lvl(75, 15, 10, 15, 60, 80, 20) },
+        { id: "pm", title: "Product Manager", track: "Продукт", levels: lvl(55, 30, 10, 20, 85, 70, 75) },
+      ];
+      const STEPS = [
+        { id: "sql-c", skill: "sql", kind: "Курс", title: "SQL для рабочих задач", detail: "Оконные функции, индексы, планы запросов." },
+        { id: "sql-t", skill: "sql", kind: "Задача", title: "Разобрать медленный отчёт", detail: "Найти узкое место и предложить индекс." },
+        { id: "des-c", skill: "design", kind: "Курс", title: "System Design Basics", detail: "Нагрузка, кэш, границы сервисов." },
+        { id: "des-t", skill: "design", kind: "Задача", title: "Схема сервиса уведомлений", detail: "Одна страница: контракт, очереди, отказ." },
+        { id: "doc-c", skill: "docker", kind: "Курс", title: "Контейнеры без магии", detail: "Dockerfile, compose, окружения." },
+        { id: "doc-t", skill: "docker", kind: "Задача", title: "Поднять сервис локально", detail: "Один контейнер + healthcheck." },
+        { id: "rev-t", skill: "review", kind: "Задача", title: "Три содержательных ревью", detail: "Не стиль — риск, тест, контракт." },
+        { id: "rev-m", skill: "review", kind: "Наставник", title: "Алексей К., Senior BE", detail: "Разбор ревью раз в две недели." },
+        { id: "com-t", skill: "comms", kind: "Задача", title: "Статус без воды", detail: "Пять предложений: сделано, риск, следующий шаг." },
+        { id: "com-m", skill: "comms", kind: "Наставник", title: "Марина Л., People Partner", detail: "Обратная связь по коммуникации." },
+        { id: "an-c", skill: "analytics", kind: "Курс", title: "Метрики продукта", detail: "Воронка, когорты, что не считать успехом." },
+        { id: "an-t", skill: "analytics", kind: "Задача", title: "Один эксперимент", detail: "Гипотеза, метрика, решение." },
+        { id: "ld-t", skill: "lead", kind: "Задача", title: "Вести маленькую инициативу", detail: "Срок, состав, итог для команды." },
+        { id: "ld-m", skill: "lead", kind: "Наставник", title: "Игорь П., Engineering Manager", detail: "Раз в месяц про рост и приоритеты." },
+      ];
+      const TEAM = [
+        { name: "Иван С.", current: "jbe", target: "mbe", progress: 45 },
+        { name: "Мария К.", current: "jbe", target: "mbe", progress: 72 },
+        { name: "Дмитрий П.", current: "mbe", target: "sbe", progress: 34 },
+        { name: "Анна В.", current: "pa", target: "pm", progress: 58 },
+        { name: "Олег Н.", current: "intern", target: "jbe", progress: 81 },
+      ];
+      const KEY = "vektor-v1";
+      const DEFAULT = { name: "Артём", current: "jbe", target: "mbe", done: [] };
+      const TABS = [
+        ["path", "Роли"],
+        ["gaps", "Навыки"],
+        ["plan", "План"],
+        ["team", "Команда"],
+      ];
+
+      const roleById = (id) => ROLES.find((r) => r.id === id);
+      const gaps = (current, target) => {
+        const a = roleById(current).levels;
+        const b = roleById(target).levels;
+        return SKILLS.map((s) => ({ skill: s, have: a[s.id], need: b[s.id], delta: Math.max(0, b[s.id] - a[s.id]) })).sort((x, y) => y.delta - x.delta);
+      };
+      const ending = (n) => {
+        const m10 = n % 10;
+        const m100 = n % 100;
+        if (m10 === 1 && m100 !== 11) return "";
+        if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return "а";
+        return "ов";
+      };
+      const nextRole = (id) => {
+        const i = ROLES.findIndex((r) => r.id === id);
+        return ROLES[Math.min(i + 1, ROLES.length - 1)].id;
+      };
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "\u0026amp;", "<": "\u0026lt;", ">": "\u0026gt;", '"': "\u0026quot;", "'": "\u0026#39;" })[c]);
+
+      let state = load();
+      let tab = "path";
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (!raw) return { ...DEFAULT, done: [] };
+          const parsed = JSON.parse(raw);
+          return {
+            name: typeof parsed.name === "string" ? parsed.name : DEFAULT.name,
+            current: roleById(parsed.current) ? parsed.current : DEFAULT.current,
+            target: roleById(parsed.target) ? parsed.target : DEFAULT.target,
+            done: Array.isArray(parsed.done) ? parsed.done.filter((id) => STEPS.some((s) => s.id === id)) : [],
+          };
+        } catch {
+          return { ...DEFAULT, done: [] };
+        }
+      }
+      function save() {
+        localStorage.setItem(KEY, JSON.stringify(state));
+      }
+      function planOf(gapList) {
+        const open = gapList.filter((g) => g.delta > 0);
+        const relevant = STEPS.filter((s) => open.some((g) => g.skill.id === s.skill && g.delta >= 15));
+        return relevant.length ? relevant : STEPS.slice(0, 4);
+      }
+
+      function render() {
+        const gapList = gaps(state.current, state.target);
+        const openGaps = gapList.filter((g) => g.delta > 0);
+        const plan = planOf(gapList);
+        const doneCount = plan.filter((s) => state.done.includes(s.id)).length;
+        const myProgress = plan.length ? Math.round((doneCount / plan.length) * 100) : 0;
+        const cur = roleById(state.current);
+        const goal = roleById(state.target);
+
+        document.getElementById("tabs").innerHTML = TABS.map(
+          ([id, label]) => `<button type="button" data-tab="${id}" aria-selected="${tab === id}">${label}</button>`,
+        ).join("");
+        TABS.forEach(([id]) => {
+          document.getElementById(id).hidden = tab !== id;
+        });
+
+        const roles = (value) =>
+          ROLES.map(
+            (r) =>
+              `<button type="button" class="role" data-role="${r.id}" aria-pressed="${value === r.id}"><small>${esc(r.track)}</small><b>${esc(r.title)}</b></button>`,
+          ).join("");
+
+        document.getElementById("path").innerHTML =
+          `<label><span class="lbl">Как к вам обращаться</span><input id="name" type="text" maxlength="40" value="${esc(state.name)}" /></label>` +
+          `<div><span class="lbl">Сейчас</span><div class="roles" data-pick="current">${roles(state.current)}</div></div>` +
+          `<div><span class="lbl">Цель</span><div class="roles" data-pick="target">${roles(state.target)}</div></div>` +
+          (state.current === state.target
+            ? `<p class="note">Выберите роль выше текущей — тогда появится список пробелов.</p>`
+            : `<article class="card"><p class="muted">Маршрут ${esc(state.name || "сотрудника")}</p><p class="route">${esc(cur.title)}<span>→</span>${esc(goal.title)}</p><p class="muted" style="margin-top:.5rem">${openGaps.length} навык${ending(openGaps.length)} требуют роста. Прогресс плана — ${myProgress}%.</p><button type="button" class="go" data-tab="gaps">Смотреть пробелы</button></article>`);
+
+        document.getElementById("gaps").innerHTML =
+          `<h2>Что не дотягивает до ${esc(goal.title)}</h2>` +
+          gapList
+            .map(
+              (g) =>
+                `<div class="gap"><div class="row"><p><b>${esc(g.skill.name)}</b></p><p class="muted">${g.have} → ${g.need}${g.delta > 0 ? `<span class="delta">+${g.delta}</span>` : ""}</p></div><div class="bar" aria-hidden="true"><i style="width:${g.need}%"></i><b style="width:${g.have}%"></b></div></div>`,
+            )
+            .join("");
+
+        document.getElementById("plan").innerHTML =
+          `<div class="plan-head"><h2>Шаги на пути</h2><p class="count">${doneCount}/${plan.length}</p></div>` +
+          plan
+            .map((step) => {
+              const on = state.done.includes(step.id);
+              const skill = SKILLS.find((s) => s.id === step.skill);
+              return `<button type="button" class="step${on ? " on" : ""}" data-step="${step.id}" aria-pressed="${on}"><span class="box">${on ? "✓" : ""}</span><span><span class="kind">${esc(step.kind)} · ${esc(skill.name)}</span><strong>${esc(step.title)}</strong><em>${esc(step.detail)}</em></span></button>`;
+            })
+            .join("");
+
+        const row = (name, from, to, progress, me) =>
+          `<li class="member${me ? " me" : ""}"><div><p class="who">${esc(name)}</p><p class="sub">${esc(from)} → ${esc(to)}</p></div><div class="meter"><p>${progress}%</p><div class="bar"><b style="width:${progress}%"></b></div></div></li>`;
+        document.getElementById("team").innerHTML =
+          `<div class="team"><div class="team-head"><h2>Команда разработки</h2><span class="pill">Вы ${myProgress}%</span></div><ul style="margin:0;padding:0;list-style:none">` +
+          row(`${state.name || "Вы"} (вы)`, cur.title, goal.title, myProgress, true) +
+          TEAM.map((m) => row(m.name, roleById(m.current).title, roleById(m.target).title, m.progress, false)).join("") +
+          `</ul></div>`;
+      }
+
+      document.body.addEventListener("click", (e) => {
+        const tabBtn = e.target.closest("[data-tab]");
+        if (tabBtn) {
+          tab = tabBtn.dataset.tab;
+          render();
+          return;
+        }
+        const roleBtn = e.target.closest("[data-role]");
+        if (roleBtn) {
+          const pick = roleBtn.closest("[data-pick]").dataset.pick;
+          const id = roleBtn.dataset.role;
+          if (pick === "current") state.current = id;
+          if (pick === "current" && state.current === state.target) state.target = nextRole(state.current);
+          if (pick === "target") state.target = id;
+          save();
+          render();
+          return;
+        }
+        const stepBtn = e.target.closest("[data-step]");
+        if (stepBtn) {
+          const id = stepBtn.dataset.step;
+          state.done = state.done.includes(id) ? state.done.filter((x) => x !== id) : state.done.concat(id);
+          save();
+          render();
+        }
+      });
+      document.body.addEventListener("input", (e) => {
+        if (e.target.id !== "name") return;
+        const pos = e.target.selectionStart;
+        state.name = e.target.value.slice(0, 40);
+        save();
+        render();
+        const next = document.getElementById("name");
+        if (next) {
+          next.focus();
+          next.setSelectionRange(pos, pos);
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>
